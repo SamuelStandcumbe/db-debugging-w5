@@ -6,6 +6,7 @@ When we call ArtistRepository#all
 We get a list of Artist objects reflecting the seed data.
 """
 def test_get_all_records(db_connection): # See conftest.py to learn what `db_connection` is.
+    db_connection.seed("seeds/music_library.sql") # there was no get seed line
     repository = ArtistRepository(db_connection) # Create a new ArtistRepository
 
     artists = repository.all() # Get all artists
@@ -26,8 +27,8 @@ def test_get_single_record(db_connection):
     db_connection.seed("seeds/music_library.sql")
     repository = ArtistRepository(db_connection)
 
-    artist = repository.find(3)
-    assert artist == Artist("3", "Taylor Swift", "Pop")
+    artist = repository.find(3)  
+    assert artist == Artist(3, "Taylor Swift", "Pop") # the argument was looking for a string for id, but id is stored as an int
 
 """
 When we call ArtistRepository#create
@@ -37,12 +38,12 @@ def test_create_record(db_connection):
     db_connection.seed("seeds/music_library.sql")
     repository = ArtistRepository(db_connection)
 
-    repository.create(Artist(1,"The Beatles","Rock"))
+    repository.create(Artist(5, "The Beatles","Rock")) # trying to assert an id that i already present in the db
 
     result = repository.all()
     assert result == [
         Artist(1, "Pixies", "Rock"),
-        Artist(2, "Abba", "Pop"),
+        Artist(2, "ABBA", "Pop"),   # Abba is not ABBA
         Artist(3, "Taylor Swift", "Pop"),
         Artist(4, "Nina Simone", "Jazz"),
         Artist(5, "The Beatles", "Rock"),
